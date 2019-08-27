@@ -12,9 +12,12 @@ TARGET = ProjetMarioEngine
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    mainview.cpp \
+    player.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    mainview.h \
+    player.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
