@@ -5,7 +5,7 @@
 
 bool goLeft = false;
 bool goRight = false;
-
+bool jump = false;
 
 Player::Player()
 {
@@ -15,7 +15,7 @@ Player::Player()
     QTimer * timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(goPlayer()));
 
-    timer->start(50);
+    timer->start(60);
 
 }
 
@@ -38,6 +38,10 @@ void Player::keyPressEvent(QKeyEvent *event){
     //    if (event->key() == Qt::Key_Down){
     //        _player->setPos(_player->x(),_player->y()+10);
     //    }
+
+    if(event->key() == Qt::Key_Space){
+        //...
+    }
 }
 
 void Player::keyReleaseEvent(QKeyEvent *event){
@@ -47,6 +51,9 @@ void Player::keyReleaseEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Right){
         goRight = pos().x() + 100 > 800;
     }
+    if(event->key() == Qt::Key_Space){
+        //...
+    }
 }
 
 void Player::goPlayer() {
@@ -55,6 +62,9 @@ void Player::goPlayer() {
     }
     if (goRight){
         setPos(x()+20, y());
+    }
+    if (jump){
+        //...
     }
 }
 
