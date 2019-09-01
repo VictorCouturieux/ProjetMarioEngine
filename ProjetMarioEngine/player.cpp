@@ -1,70 +1,210 @@
 #include "player.h"
-#include <QKeyEvent>
-#include <QGraphicsScene>
-#include <QTimer>
+#include <QPainter>
 
-bool goLeft = false;
-bool goRight = false;
-bool jump = false;
-
-Player::Player()
+Player::Player(QGraphicsItem *parent) : QGraphicsItem(parent)
+  ,m_direction(0)
+  ,mCurrentFrame()
+  ,m_StandingDirection()
+  , mState(Standing)
 {
-    setRect(0,0,100,100);
+    setFlag(ItemClipsToShape);
 
-    //connect
-    QTimer * timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(goPlayer()));
-
-    timer->start(60);
+    mWalkPixmap = QPixmap(":/images/mario.png");
+    mStandingPixmap = QPixmap(":/images/mariostop.png");
+    mJumpPixmap = QPixmap(":/images/mario_jump.png");
+    standShootPixmap = QPixmap(":/images/mariostop.png");
+    mPixmap = mWalkPixmap;
 
 }
 
-void Player::keyPressEvent(QKeyEvent *event){
-    //    QGraphicsView::keyPressEvent(event);
-    //    QGraphicsItem::keyPressEvent(event);
-    //    qDebug() << "Myrect knows that you pressed a key";
-    //    std::cout << "Myrect knows that you pressed a key" << std::endl;
+Player::~Player(){
 
-    if (event->key() == Qt::Key_Left){
-        goLeft = pos().x() > 0;
+}
+
+
+void Player::stand(){
+
+    mPixmap = mStandingPixmap;
+    mCurrentFrame = 0;
+    mState = Standing;
+}
+
+void Player::jump(){
+    mState = Jumping;
+}
+
+void Player::standShoot(){
+
+    mPixmap = standShootPixmap;
+    mCurrentFrame = 0;
+    mState = StandShoot;
+}
+
+void Player::walk(){
+
+    if(mState == Walking) {
+        return;
     }
-    if (event->key() == Qt::Key_Right){
-        goRight = pos().x() + 100 < 800;
-    }
 
-    //    if (event->key() == Qt::Key_Up){
-    //        _player->setPos(_player->x(),_player->y()-10);
-    //    }
-    //    if (event->key() == Qt::Key_Down){
-    //        _player->setPos(_player->x(),_player->y()+10);
-    //    }
+    mPixmap = mWalkPixmap;
+    mCurrentFrame = 0;
+    mState = Walking;
+}
 
-    if(event->key() == Qt::Key_Space){
-        //...
+void Player::fall(){
+
+    mState = Falling;
+}
+
+bool Player::isFalling(){
+
+    return mState == Falling;
+}
+
+int Player::direction() const{
+
+    return m_direction;
+}
+
+int Player::standingDirection() const{
+
+    return m_StandingDirection;
+}
+
+void Player::nextFrame(){
+
+    mCurrentFrame += 57;
+    if (mCurrentFrame >= 1191 ) {
+        mCurrentFrame = 0;
     }
 }
 
-void Player::keyReleaseEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_Left){
-        goLeft = pos().x() < 0;
-    }
-    if(event->key() == Qt::Key_Right){
-        goRight = pos().x() + 100 > 800;
-    }
-    if(event->key() == Qt::Key_Space){
-        //...
+QRectF Player::boundingRect() const{
+
+    return QRectF(0,0,45,73);
+}
+
+void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+
+    painter->drawPixmap(0,0, mPixmap, mCurrentFrame, 0,45, 73);
+    setTransformOriginPoint(boundingRect().center());
+    Q_UNUSED(widget);
+    Q_UNUSED(option);
+}
+
+void Player::addDirection(int direction){
+
+    if (direction == m_direction)
+        return;
+
+    m_direction += direction;
+
+    if (0 != m_direction){
+        if (-1 == m_direction)
+
+            setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0));
+        else
+            setTransform(QTransform());
     }
 }
 
-void Player::goPlayer() {
-    if (goLeft){
-        setPos(x()-20, y());
-    }
-    if (goRight){
-        setPos(x()+20, y());
-    }
-    if (jump){
-        //...
-    }
+void Player::addStandingDirection(int standingDirection){
+    m_StandingDirection = standingDirection;
 }
+
+bool Player::isTouchingFoot(QGraphicsItem *item){
+
+    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -5, boundingRect().width(), 5);
+    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+
+    return rect.intersects(otherRect);
+}
+
+bool Player::isTouchingHead(QGraphicsItem *item){
+
+    QRectF rect(pos().x(), pos().y(), boundingRect().width(), 5);
+    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+    return rect.intersects(otherRect);
+}
+
+bool Player::isTouchingPlatform(QGraphicsItem *item){
+
+    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) - 5, boundingRect().width(), 10);
+    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+    return rect.intersects(otherRect);
+}
+
+
+
+
+
+//#include "player.h"
+//#include <QKeyEvent>
+//#include <QGraphicsScene>
+//#include <QTimer>
+
+//bool goLeft = false;
+//bool goRight = false;
+//bool jump = false;
+
+//Player::Player()
+//{
+//    setRect(0,0,100,100);
+
+//    //connect
+//    QTimer * timer = new QTimer();
+//    connect(timer, SIGNAL(timeout()), this, SLOT(goPlayer()));
+
+//    timer->start(60);
+
+//}
+
+//void Player::keyPressEvent(QKeyEvent *event){
+//    //    QGraphicsView::keyPressEvent(event);
+//    //    QGraphicsItem::keyPressEvent(event);
+//    //    qDebug() << "Myrect knows that you pressed a key";
+//    //    std::cout << "Myrect knows that you pressed a key" << std::endl;
+
+//    if (event->key() == Qt::Key_Left){
+//        goLeft = pos().x() > 0;
+//    }
+//    if (event->key() == Qt::Key_Right){
+//        goRight = pos().x() + 100 < 800;
+//    }
+
+//    //    if (event->key() == Qt::Key_Up){
+//    //        _player->setPos(_player->x(),_player->y()-10);
+//    //    }
+//    //    if (event->key() == Qt::Key_Down){
+//    //        _player->setPos(_player->x(),_player->y()+10);
+//    //    }
+
+//    if(event->key() == Qt::Key_Space){
+//        //...
+//    }
+//}
+
+//void Player::keyReleaseEvent(QKeyEvent *event){
+//    if(event->key() == Qt::Key_Left){
+//        goLeft = pos().x() < 0;
+//    }
+//    if(event->key() == Qt::Key_Right){
+//        goRight = pos().x() + 100 > 800;
+//    }
+//    if(event->key() == Qt::Key_Space){
+//        //...
+//    }
+//}
+
+//void Player::goPlayer() {
+//    if (goLeft){
+//        setPos(x()-20, y());
+//    }
+//    if (goRight){
+//        setPos(x()+20, y());
+//    }
+//    if (jump){
+//        //...
+//    }
+//}
 

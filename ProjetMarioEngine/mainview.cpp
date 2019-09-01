@@ -1,17 +1,17 @@
 #include "mainview.h"
-#include "player.h"
 
-#include <QKeyEvent>
-#include <QGraphicsScene>
-#include <QDebug>
-#include <QTimer>
-
-Player * _player;
-QTimer * _timer;
-
-MainView::MainView(QGraphicsScene * scene, Player * player, QTimer * timer) : QGraphicsView(scene)
+MainView::MainView()
 {
-    _player = player;
-    _timer = timer;
+
+    this->setFixedSize(QSize(1280, 720));
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
 }
 
+void MainView::sceneSet(QGraphicsScene *scene) {
+
+    setScene(scene);
+    emit sceneChanged();
+}

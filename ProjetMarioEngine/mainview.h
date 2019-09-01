@@ -1,16 +1,18 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
-#include "player.h"
-
-#include <QGraphicsView>
-#include <QObject>
-#include <QTimer>
+#include "mainwin.h"
+#include <QWidget>
 
 class MainView: public QGraphicsView
 {
+    Q_OBJECT
+signals:
+    void sceneChanged();
+
 public:
-    MainView(QGraphicsScene * scene, Player * player, QTimer * timer);
+    MainView();
+    void sceneSet(QGraphicsScene *);
 };
 
 #endif // MAINVIEW_H

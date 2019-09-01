@@ -13,11 +13,20 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
+    backgrounditem.cpp \
+    levelscene.cpp \
     mainview.cpp \
+    mainwin.cpp \
     player.cpp
 
 HEADERS  += \
+    backgrounditem.h \
+    levelscene.h \
     mainview.h \
+    mainwin.h \
     player.h
 
 FORMS    +=
+
+RESOURCES += \
+    resources.qrc
