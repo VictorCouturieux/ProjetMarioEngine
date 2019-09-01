@@ -14,19 +14,24 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     backgrounditem.cpp \
+    flag.cpp \
     levelscene.cpp \
     mainview.cpp \
     mainwin.cpp \
-    player.cpp
+    player.cpp \
+    wingamedialog.cpp
 
 HEADERS  += \
     backgrounditem.h \
+    flag.h \
     levelscene.h \
     mainview.h \
     mainwin.h \
-    player.h
+    player.h \
+    wingamedialog.h
 
-FORMS    +=
+FORMS    += \
+    wingamedialog.ui
 
 RESOURCES += \
     resources.qrc

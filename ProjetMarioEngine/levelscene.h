@@ -18,6 +18,8 @@ class QGraphicsPixmapItem;
 class QPropertyAnimation;
 class Player;
 class QScrollBar;
+class WinGameDialog;
+class Flag;
 
 class LevelScene : public QGraphicsScene
 {
@@ -39,10 +41,12 @@ private slots:
     void checkTimer();
     void setMarioSize(int);
 
-    bool handleCollisionWithPlatform();
     QGraphicsItem* collidingPlatforms();
     void jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
+    void checkCollidingFlag();
+
+    bool handleCollisionWithPlatform();
 signals:
     void jumpFactorChanged(qreal);
 
@@ -71,6 +75,13 @@ private:
     BackgroundItem *m_Scene;
     BackgroundItem *m_ground;
     BackgroundItem *m_wall;
+
+    BackgroundItem *m_flag;
+    BackgroundItem *m_castle;
+
+    Flag *flagVictory;
+
+    WinGameDialog *winGameDialog;
 
     bool bigMario;
     bool littleMario;

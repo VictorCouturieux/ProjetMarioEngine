@@ -2,6 +2,8 @@
 //#include "player.h"
 //#include "backgrounditem.h"
 //#include "mainview.h"
+#include "wingamedialog.h"
+#include "flag.h"
 
 #include <QKeyEvent>
 //#include <QPropertyAnimation>
@@ -86,6 +88,25 @@ void LevelScene::initPlayField(){
     m_wall->setPos(2900, m_groundLevel - m_wall->boundingRect().height());
     addItem(m_wall);
 
+    //Add flag Pole
+    m_flag = new BackgroundItem(QPixmap(":/images/flag"));
+    m_flag->setPos(7234, m_groundLevel - m_flag->boundingRect().height());
+    addItem(m_flag);
+
+    //Add Flag Animation
+    flagVictory = new Flag();
+    flagVictory->setPos(7320, m_groundLevel - flagVictory->boundingRect().height()-185);
+    addItem(flagVictory);
+
+    //Add Castle
+    m_castle = new BackgroundItem(QPixmap(":/images/castle"));
+    m_castle->setPos(7637, m_groundLevel - m_castle->boundingRect().height());
+    addItem(m_castle);
+
+
+
+
+    //creat player
     m_player = new Player();
     m_player->setPos(50, m_groundLevel - m_player->boundingRect().height() );
     addItem(m_player);
@@ -177,6 +198,9 @@ void LevelScene::keyReleaseEvent(QKeyEvent *event){
 }
 
 void LevelScene::movePlayer(){
+
+    checkCollidingFlag();
+
     if(bigMario){
         if (m_player->isFalling()){
             return;
@@ -208,7 +232,7 @@ void LevelScene::movePlayer(){
             if(diff > 800){
 
                 if(scroll->value() > 6720){
-                    qDebug()<<"6720";
+//                    qDebug()<<"6720";
                     return;
                 }
 
@@ -244,6 +268,8 @@ void LevelScene::movePlayer(){
 }
 
 void LevelScene::fallPlayer(){
+//    checkCollidingFlag();
+
     m_player->setPos(m_player->pos().x(), m_player->pos().y() +30);
     QGraphicsItem* item = collidingPlatforms();
     if(item && handleCollisionWithPlatform()){
@@ -260,6 +286,10 @@ void LevelScene::fallPlayer(){
 
 //Player jump movement
 void LevelScene::jumpPlayer(){
+
+    checkCollidingFlag();
+
+
     if (QAbstractAnimation::Stopped == m_jumpAnimation->state()){
         m_player->stand();
         return;
@@ -325,6 +355,24 @@ QGraphicsItem* LevelScene::collidingPlatforms(){
         //    }
     }
     return 0;
+}
+
+void LevelScene::checkCollidingFlag(){
+    QList<QGraphicsItem*> items = collidingItems(m_player);
+    foreach (QGraphicsItem* item, items) {
+        Flag* f = qgraphicsitem_cast<Flag*>(item);
+        if(f){
+            removeItem(f);
+//            addItem(courseclear);
+            winGameDialog = new WinGameDialog();
+            winGameDialog->setFixedSize(557,355);
+            winGameDialog->setWindowFlags(((winGameDialog ->windowFlags() | Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
+            winGameDialog->exec();
+        }
+
+
+
+    }
 }
 
 bool LevelScene::handleCollisionWithPlatform(){
