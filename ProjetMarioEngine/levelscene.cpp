@@ -503,8 +503,8 @@ void LevelScene::checkCollidingWarpTube() {
             if(w->pos().x()){
                 if(m_player->pos().x() < w->pos().x())
                     m_player->setPos(w->pos().x() - m_player->boundingRect().width(),m_player->pos().y());
-                if(m_player->pos().x() > w->pos().x() ){
-                    m_player->setPos(w->pos().x() + m_player->boundingRect().width()+25, m_player->pos().y());
+                if(m_player->pos().x() > w->pos().x() && m_player->pos().y() > w->pos().y()){
+                    m_player->setPos(w->pos().x() + w->boundingRect().width()+10, m_player->pos().y());
                 }
             }
         }
