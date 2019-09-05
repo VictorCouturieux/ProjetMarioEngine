@@ -14,20 +14,24 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     backgrounditem.cpp \
+    brickplatform.cpp \
     flag.cpp \
     levelscene.cpp \
     mainview.cpp \
     mainwin.cpp \
     player.cpp \
+    warptube.cpp \
     wingamedialog.cpp
 
 HEADERS  += \
     backgrounditem.h \
+    brickplatform.h \
     flag.h \
     levelscene.h \
     mainview.h \
     mainwin.h \
     player.h \
+    warptube.h \
     wingamedialog.h
 
 FORMS    += \

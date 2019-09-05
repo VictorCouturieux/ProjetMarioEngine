@@ -60,5 +60,6 @@
         <file>images/wallplatform.png</file>
         <file>images/Warp.png</file>
         <file>images/x5s.png</file>
+        <file>images/warpTube2.png</file>
     </qresource>
 </RCC>

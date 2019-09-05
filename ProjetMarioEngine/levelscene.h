@@ -20,6 +20,8 @@ class Player;
 class QScrollBar;
 class WinGameDialog;
 class Flag;
+class BrickPlatform;
+class WarpTube;
 
 class LevelScene : public QGraphicsScene
 {
@@ -41,12 +43,15 @@ private slots:
     void checkTimer();
     void setMarioSize(int);
 
+    void checkCollidingWarpTube();
+
     QGraphicsItem* collidingPlatforms();
     void jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
     void checkCollidingFlag();
 
     bool handleCollisionWithPlatform();
+
 signals:
     void jumpFactorChanged(qreal);
 
@@ -74,10 +79,31 @@ private:
     BackgroundItem *m_sky;
     BackgroundItem *m_Scene;
     BackgroundItem *m_ground;
-    BackgroundItem *m_wall;
+
 
     BackgroundItem *m_flag;
     BackgroundItem *m_castle;
+
+    BackgroundItem *m_wall;
+    BrickPlatform *mBrickPlatformWall;
+
+    BrickPlatform* mBrickPlatform1;
+    BrickPlatform* mBrickPlatform2;
+    BrickPlatform* mBrickPlatform3;
+    BrickPlatform* mBrickPlatform4;
+    BrickPlatform* mBrickPlatform5;
+    BrickPlatform* mBrickPlatform6;
+    BrickPlatform* mBrickPlatform7;
+    BrickPlatform* mBrickPlatform8;
+    BrickPlatform* mBrickPlatform9;
+    BrickPlatform* mBrickPlatform10;
+    BrickPlatform* mBrickPlatform11;
+
+    WarpTube *m_warpTube1;
+    BrickPlatform *mBrickPlatformWT1;
+    WarpTube *m_warpTube2;
+    BrickPlatform *mBrickPlatformWT2;
+    WarpTube *m_warpTube3;
 
     Flag *flagVictory;
 

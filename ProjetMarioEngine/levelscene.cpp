@@ -4,6 +4,8 @@
 //#include "mainview.h"
 #include "wingamedialog.h"
 #include "flag.h"
+#include "brickplatform.h"
+#include "warptube.h"
 
 #include <QKeyEvent>
 //#include <QPropertyAnimation>
@@ -22,7 +24,6 @@ LevelScene::LevelScene(MainView* v, QObject *parent)
     , m_groundLevel(0)
     , m_jumpAnimation(new QPropertyAnimation(this))
     , m_platform()
-
     , m_player()
     , m_sky(0)
 
@@ -42,7 +43,7 @@ LevelScene::LevelScene(MainView* v, QObject *parent)
     connect(&m_timer, &QTimer::timeout, this, &LevelScene::movePlayer);
 
     mFallTimer.setInterval(20);
-    connect(&mFallTimer, &QTimer::timeout, this, &LevelScene::movePlayer);
+    connect(&mFallTimer, &QTimer::timeout, this, &LevelScene::fallPlayer);
 
     m_jumpAnimation->setTargetObject(this);
     m_jumpAnimation->setPropertyName("jumpFactor");
@@ -76,16 +77,15 @@ void LevelScene::initPlayField(){
     m_sky->setPos(0,0);
     addItem(m_sky);
 
-    m_ground = new BackgroundItem(QPixmap(":/images/ground"));
-    addItem(m_ground);
-    m_ground->setPos(0, m_groundLevel );
-
     m_Scene = new BackgroundItem(QPixmap(":/images/Scene"));
     m_Scene->setPos(0, m_groundLevel - m_Scene->boundingRect().height());
     addItem(m_Scene);
 
+    mBrickPlatformWall = new BrickPlatform(6);
     m_wall = new BackgroundItem(QPixmap(":/images/wallf2.png"));
-    m_wall->setPos(2900, m_groundLevel - m_wall->boundingRect().height());
+    mBrickPlatformWall->setPos(2810, m_groundLevel - m_wall->boundingRect().height());
+    addItem(mBrickPlatformWall);
+    m_wall->setPos(2800, m_groundLevel - m_wall->boundingRect().height());
     addItem(m_wall);
 
     //Add flag Pole
@@ -104,11 +104,81 @@ void LevelScene::initPlayField(){
     addItem(m_castle);
 
 
+    //Add warp tube
+    m_warpTube1 = new WarpTube();
+    m_warpTube1->setPos(1700, m_groundLevel - m_warpTube1->boundingRect().height()+150);
+    addItem(m_warpTube1);
 
+    mBrickPlatformWT1 = new BrickPlatform(1);
+    mBrickPlatformWT1->setPos(1950, m_groundLevel - mBrickPlatformWT1->boundingRect().height()-150);
+    addItem(mBrickPlatformWT1);
+
+    m_warpTube2 = new WarpTube();
+    m_warpTube2->setPos(2100, m_groundLevel - m_warpTube2->boundingRect().height()+100);
+    addItem(m_warpTube2);
+
+    mBrickPlatformWT2 = new BrickPlatform(1);
+    mBrickPlatformWT2->setPos(2375, m_groundLevel - mBrickPlatformWT2->boundingRect().height()-225);
+    addItem(mBrickPlatformWT2);
+
+    m_warpTube3 = new WarpTube();
+    m_warpTube3->setPos(2550, m_groundLevel - m_warpTube3->boundingRect().height());
+    addItem(m_warpTube3);
+
+
+    //Add brick platforms
+    mBrickPlatform1 = new BrickPlatform(5);
+    mBrickPlatform1->setPos(1400, m_groundLevel - mBrickPlatform1->boundingRect().height()-100);
+    addItem(mBrickPlatform1);
+
+    mBrickPlatform2 = new BrickPlatform(1);
+    mBrickPlatform2->setPos(1500, m_groundLevel - mBrickPlatform2->boundingRect().height()-270);
+    addItem(mBrickPlatform2);
+
+    mBrickPlatform3 = new BrickPlatform(1);
+    mBrickPlatform3->setPos(3600, m_groundLevel - mBrickPlatform3->boundingRect().height()-150);
+    addItem(mBrickPlatform3);
+
+    mBrickPlatform4 = new BrickPlatform(3);
+    mBrickPlatform4->setPos(4600, m_groundLevel - mBrickPlatform4->boundingRect().height()-150);
+    addItem(mBrickPlatform4);
+
+    mBrickPlatform5 = new BrickPlatform(8);
+    mBrickPlatform5->setPos(4900, m_groundLevel - mBrickPlatform5->boundingRect().height()-300);
+    addItem(mBrickPlatform5);
+
+    mBrickPlatform6 = new BrickPlatform(4);
+    mBrickPlatform6->setPos(5200, m_groundLevel - mBrickPlatform6->boundingRect().height()-300);
+    addItem(mBrickPlatform6);
+
+    mBrickPlatform7 = new BrickPlatform(1);
+    mBrickPlatform7->setPos(5500, m_groundLevel - mBrickPlatform7->boundingRect().height()-150);
+    addItem(mBrickPlatform7);
+
+    mBrickPlatform8 = new BrickPlatform(2);
+    mBrickPlatform8->setPos(6100, m_groundLevel - mBrickPlatform8->boundingRect().height()-150);
+    addItem(mBrickPlatform8);
+
+    mBrickPlatform9 = new BrickPlatform(1);
+    mBrickPlatform9->setPos(6500, m_groundLevel - mBrickPlatform9->boundingRect().height()-150);
+    addItem(mBrickPlatform9);
+
+    mBrickPlatform10 = new BrickPlatform(1);
+    mBrickPlatform10->setPos(6700, m_groundLevel - mBrickPlatform10->boundingRect().height()-150);
+    addItem(mBrickPlatform10);
+
+    mBrickPlatform11 = new BrickPlatform(1);
+    mBrickPlatform11->setPos(6700, m_groundLevel - mBrickPlatform11->boundingRect().height()-300);
+    addItem(mBrickPlatform11);
+
+    //add ground
+    m_ground = new BackgroundItem(QPixmap(":/images/ground"));
+    addItem(m_ground);
+    m_ground->setPos(0, m_groundLevel );
 
     //creat player
     m_player = new Player();
-    m_player->setPos(50, m_groundLevel - m_player->boundingRect().height() );
+    m_player->setPos(200, m_groundLevel - m_player->boundingRect().height() );
     addItem(m_player);
 
 }
@@ -133,6 +203,16 @@ void LevelScene::setJumpFactor(const qreal &jumpFactor){
 
 //Timer event for animations
 void LevelScene::timerEvent(QTimerEvent *){
+    mBrickPlatform1->nextFrame();
+    mBrickPlatform2->nextFrame();
+    mBrickPlatform3->nextFrame();
+    mBrickPlatform4->nextFrame();
+    mBrickPlatform5->nextFrame();
+    mBrickPlatform6->nextFrame();
+    mBrickPlatform7->nextFrame();
+    mBrickPlatform8->nextFrame();
+
+    flagVictory->nextFrame();
 
 }
 
@@ -200,6 +280,7 @@ void LevelScene::keyReleaseEvent(QKeyEvent *event){
 void LevelScene::movePlayer(){
 
     checkCollidingFlag();
+    checkCollidingWarpTube();
 
     if(bigMario){
         if (m_player->isFalling()){
@@ -210,11 +291,16 @@ void LevelScene::movePlayer(){
         if (0 == direction)
             return;
 
-        if(!(m_platform && m_player->isTouchingPlatform(m_platform))&& m_jumpAnimation->state() == QAbstractAnimation::Stopped){
-            if(m_platform){
-                m_player->fall();
-                mFallTimer.start();
+        if(bigMario){
+            if(!(m_platform && m_player->isTouchingPlatform(m_platform))&& m_jumpAnimation->state() == QAbstractAnimation::Stopped){
+                if(m_platform){
+                    m_player->fall();
+                    mFallTimer.start();
+                }
             }
+        }
+        else{
+            return;
         }
 
 
@@ -239,6 +325,15 @@ void LevelScene::movePlayer(){
                 scroll->setValue(dx + scroll->value());
                 m_sky->setPos(dx + m_sky->pos().x(), 0);
                 m_Scene->setPos(dx + m_Scene->pos().x(), m_Scene->y());
+
+//                m_countLogo->setPos(dx + m_countLogo->pos().x(), m_countLogo->y());
+//                m_count->setPos(dx + m_count->pos().x(), m_count->y());
+//                m_score->setPos(dx + m_score->pos().x(), m_score->y());
+//                m_gameTimer->setPos(dx + m_gameTimer->pos().x(), m_gameTimer->y());
+//                m_scoreLogo->setPos(dx + m_scoreLogo->pos().x(), m_scoreLogo->y());
+//                m_timerLogo->setPos(dx + m_timerLogo->pos().x(), m_timerLogo->y());
+//                gameover->setPos(dx + gameover->pos().x(), gameover->y());
+//                courseclear->setPos(dx + courseclear->pos().x(), courseclear->y());
             }
         }
 
@@ -260,6 +355,15 @@ void LevelScene::movePlayer(){
                 scroll->setValue(dx + scroll->value());
                 m_sky->setPos(dx + m_sky->pos().x(), 0);
                 m_Scene->setPos(dx + m_Scene->pos().x(), m_Scene->y());
+
+                //                m_countLogo->setPos(dx + m_countLogo->pos().x(), m_countLogo->y());
+                //                m_count->setPos(dx + m_count->pos().x(), m_count->y());
+                //                m_score->setPos(dx + m_score->pos().x(), m_score->y());
+                //                m_gameTimer->setPos(dx + m_gameTimer->pos().x(), m_gameTimer->y());
+                //                m_scoreLogo->setPos(dx + m_scoreLogo->pos().x(), m_scoreLogo->y());
+                //                m_timerLogo->setPos(dx + m_timerLogo->pos().x(), m_timerLogo->y());
+                //                gameover->setPos(dx + gameover->pos().x(), gameover->y());
+//                                courseclear->setPos(dx + courseclear->pos().x(), courseclear->y());
             }
         }
 
@@ -268,8 +372,7 @@ void LevelScene::movePlayer(){
 }
 
 void LevelScene::fallPlayer(){
-//    checkCollidingFlag();
-
+//    qDebug()<<"FALL";
     m_player->setPos(m_player->pos().x(), m_player->pos().y() +30);
     QGraphicsItem* item = collidingPlatforms();
     if(item && handleCollisionWithPlatform()){
@@ -288,13 +391,12 @@ void LevelScene::fallPlayer(){
 void LevelScene::jumpPlayer(){
 
     checkCollidingFlag();
-
+    checkCollidingWarpTube();
 
     if (QAbstractAnimation::Stopped == m_jumpAnimation->state()){
         m_player->stand();
         return;
     }
-
 
     QGraphicsItem* item = collidingPlatforms();
     if(item){
@@ -342,7 +444,7 @@ void LevelScene::jumpPlayer(){
 
 void LevelScene::jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState){
     if(newState == QAbstractAnimation::Stopped && oldState == QAbstractAnimation::Running){
-        //handleCollisionWithPlatform();
+//        handleCollisionWithPlatform();
     }
 }
 
@@ -350,9 +452,12 @@ QGraphicsItem* LevelScene::collidingPlatforms(){
     //todo return platform without colision
     QList<QGraphicsItem*> items =  collidingItems(m_player);
     foreach(QGraphicsItem *item, items){
-        //    if(BrickPlatform *brickplatform = qgraphicsitem_cast<BrickPlatform *>(item)){
-        //        return brickplatform;
-        //    }
+            if(BrickPlatform *brickplatform = qgraphicsitem_cast<BrickPlatform *>(item)){
+                return brickplatform;
+            }
+            if(WarpTube *warpTube = qgraphicsitem_cast<WarpTube *>(item)){
+                return warpTube;
+            }
     }
     return 0;
 }
@@ -369,9 +474,6 @@ void LevelScene::checkCollidingFlag(){
             winGameDialog->setWindowFlags(((winGameDialog ->windowFlags() | Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
             winGameDialog->exec();
         }
-
-
-
     }
 }
 
@@ -390,4 +492,21 @@ bool LevelScene::handleCollisionWithPlatform(){
         m_platform = 0;
     }
     return false;
+}
+
+void LevelScene::checkCollidingWarpTube() {
+    QList<QGraphicsItem*> items = collidingItems(m_player);
+    foreach (QGraphicsItem* item, items) {
+
+        WarpTube* w = qgraphicsitem_cast<WarpTube*>(item);
+        if(w){
+            if(w->pos().x()){
+                if(m_player->pos().x() < w->pos().x())
+                    m_player->setPos(w->pos().x() - m_player->boundingRect().width(),m_player->pos().y());
+                if(m_player->pos().x() > w->pos().x() ){
+                    m_player->setPos(w->pos().x() + m_player->boundingRect().width()+25, m_player->pos().y());
+                }
+            }
+        }
+     }
 }
