@@ -22,6 +22,7 @@ class WinGameDialog;
 class Flag;
 class BrickPlatform;
 class WarpTube;
+class Enemy;
 
 class LevelScene : public QGraphicsScene
 {
@@ -41,7 +42,7 @@ private slots:
     void jumpPlayer();
     void fallPlayer();
     void checkTimer();
-    void setMarioSize(int);
+    void marioDeath(int);
 
     void checkCollidingWarpTube();
 
@@ -80,7 +81,6 @@ private:
     BackgroundItem *m_Scene;
     BackgroundItem *m_ground;
 
-
     BackgroundItem *m_flag;
     BackgroundItem *m_castle;
 
@@ -105,12 +105,24 @@ private:
     BrickPlatform *mBrickPlatformWT2;
     WarpTube *m_warpTube3;
 
+    Enemy *m_ennemy1;
+    Enemy *m_ennemy2;
+    Enemy *m_ennemy3;
+    Enemy *m_ennemy4;
+    Enemy *m_ennemy5;
+    Enemy *m_ennemy6;
+    Enemy *m_ennemy7;
+    Enemy *m_ennemy8;
+    Enemy *m_ennemy9;
+    Enemy *m_ennemy10;
+
     Flag *flagVictory;
 
     WinGameDialog *winGameDialog;
 
     bool bigMario;
-    bool littleMario;
+//    bool littleMario;
+
     bool falling;
     bool jumping;
 

@@ -17,9 +17,12 @@ public:
     int type() const;
     void handleCollosionGoomba();
     void nextFrame();
+    QPointF getPosBoundingRect();
 
 private:
 
+    int sizeX;
+    int sizeY;
     int mCurrentFrame;
     QPixmap mPixmap;
     QRectF mPlatform;

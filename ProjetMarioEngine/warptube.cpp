@@ -6,6 +6,8 @@
 WarpTube::WarpTube(QGraphicsItem * parent) :
     QGraphicsItem (parent)
   , mCurrentFrame()
+  , sizeX(140)
+  , sizeY(256)
 {
     setFlag(ItemClipsToShape);
      mPixmap = QPixmap(":/images/warpTube2.png");
@@ -19,11 +21,11 @@ void WarpTube::nextFrame(){
 }
 
 QRectF WarpTube:: boundingRect() const{
-    return QRectF(0,0,140,256);
+    return QRectF(0,0,sizeX,sizeY);
 }
 
 void WarpTube::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->drawPixmap(0,0, mPixmap, mCurrentFrame, 0, 140, 256);
+    painter->drawPixmap(0,0, mPixmap, mCurrentFrame, 0, sizeX, sizeY);
     setTransformOriginPoint((boundingRect().center()));
     Q_UNUSED(widget);
     Q_UNUSED(option);
@@ -31,4 +33,8 @@ void WarpTube::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 int WarpTube::type() const{
     return Type;
+}
+
+QPointF WarpTube::getPosBoundingRect(){
+    return QPointF(x()+sizeX, y()+sizeY);
 }

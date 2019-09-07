@@ -6,6 +6,7 @@
 #include "flag.h"
 #include "brickplatform.h"
 #include "warptube.h"
+#include "enemy.h"
 
 #include <QKeyEvent>
 //#include <QPropertyAnimation>
@@ -26,6 +27,7 @@ LevelScene::LevelScene(MainView* v, QObject *parent)
     , m_platform()
     , m_player()
     , m_sky(0)
+    , m_ennemy1()
 
 {
     viewer->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
@@ -57,7 +59,7 @@ LevelScene::LevelScene(MainView* v, QObject *parent)
     connect(m_jumpAnimation, &QPropertyAnimation::stateChanged, this, &LevelScene::jumpStatusChanged);
 
     bigMario = true;
-    littleMario = false;
+//    littleMario = false;
 
     jumping = false;
     falling = false;
@@ -103,7 +105,6 @@ void LevelScene::initPlayField(){
     m_castle->setPos(7637, m_groundLevel - m_castle->boundingRect().height());
     addItem(m_castle);
 
-
     //Add warp tube
     m_warpTube1 = new WarpTube();
     m_warpTube1->setPos(1700, m_groundLevel - m_warpTube1->boundingRect().height()+150);
@@ -128,11 +129,11 @@ void LevelScene::initPlayField(){
 
     //Add brick platforms
     mBrickPlatform1 = new BrickPlatform(5);
-    mBrickPlatform1->setPos(1400, m_groundLevel - mBrickPlatform1->boundingRect().height()-100);
+    mBrickPlatform1->setPos(1300, m_groundLevel - mBrickPlatform1->boundingRect().height()-100);
     addItem(mBrickPlatform1);
 
     mBrickPlatform2 = new BrickPlatform(1);
-    mBrickPlatform2->setPos(1500, m_groundLevel - mBrickPlatform2->boundingRect().height()-270);
+    mBrickPlatform2->setPos(1400, m_groundLevel - mBrickPlatform2->boundingRect().height()-270);
     addItem(mBrickPlatform2);
 
     mBrickPlatform3 = new BrickPlatform(1);
@@ -143,11 +144,11 @@ void LevelScene::initPlayField(){
     mBrickPlatform4->setPos(4600, m_groundLevel - mBrickPlatform4->boundingRect().height()-150);
     addItem(mBrickPlatform4);
 
-    mBrickPlatform5 = new BrickPlatform(8);
-    mBrickPlatform5->setPos(4900, m_groundLevel - mBrickPlatform5->boundingRect().height()-300);
+    mBrickPlatform5 = new BrickPlatform(5);
+    mBrickPlatform5->setPos(4850, m_groundLevel - mBrickPlatform5->boundingRect().height()-300);
     addItem(mBrickPlatform5);
 
-    mBrickPlatform6 = new BrickPlatform(4);
+    mBrickPlatform6 = new BrickPlatform(5);
     mBrickPlatform6->setPos(5200, m_groundLevel - mBrickPlatform6->boundingRect().height()-300);
     addItem(mBrickPlatform6);
 
@@ -181,10 +182,103 @@ void LevelScene::initPlayField(){
     m_player->setPos(200, m_groundLevel - m_player->boundingRect().height() );
     addItem(m_player);
 
+    //Add Enemy
+    m_ennemy1 = new Enemy(QRectF(m_ground->pos(), m_ground->boundingRect().size()), -1);
+    m_ennemy1->setPos(1100, m_groundLevel - m_ennemy1->boundingRect().height());
+    addItem(m_ennemy1);
+    connect(this->m_ennemy1, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+//    QRectF(qreal left, qreal top, qreal width, qreal height)
+    m_ennemy2 = new Enemy(QRectF(
+                              m_warpTube1->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_warpTube2->pos().x() - m_warpTube1->getPosBoundingRect().x() -100
+                              , 7234)
+                          , -1);
+    m_ennemy2->setPos(1850, m_groundLevel - m_ennemy2->boundingRect().height());
+    addItem(m_ennemy2);
+    connect(this->m_ennemy2, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy3 = new Enemy(QRectF(
+                              m_warpTube2->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_warpTube3->pos().x() - m_warpTube2->getPosBoundingRect().x() -100
+                              , 7234)
+                          , -1);
+    m_ennemy3->setPos(2300, m_groundLevel - m_ennemy3->boundingRect().height());
+    addItem(m_ennemy3);
+    connect(this->m_ennemy3, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy4 = new Enemy(QRectF(mBrickPlatformWall->pos(), mBrickPlatformWall->boundingRect().size()), -1);
+    m_ennemy4->setPos(2910, m_groundLevel - m_ennemy4->boundingRect().height() - m_wall->boundingRect().height());
+    addItem(m_ennemy4);
+    connect(this->m_ennemy4, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy5 = new Enemy(QRectF(
+                              m_warpTube3->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_flag->pos().x() -100
+                              , 7234)
+                          , -1);
+    m_ennemy5->setPos(3700, m_groundLevel - m_ennemy5->boundingRect().height());
+    addItem(m_ennemy5);
+    connect(this->m_ennemy5, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy6 = new Enemy(QRectF(
+                              m_warpTube3->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_flag->pos().x() -100
+                              , 7234)
+                          , -1);
+    m_ennemy6->setPos(4700, m_groundLevel - m_ennemy6->boundingRect().height());
+    addItem(m_ennemy6);
+    connect(this->m_ennemy6, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy7 = new Enemy(QRectF(
+                              m_warpTube3->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_flag->pos().x() -100
+                              , 7234)
+                          , -1);
+    m_ennemy7->setPos(5500, m_groundLevel - m_ennemy7->boundingRect().height());
+    addItem(m_ennemy7);
+    connect(this->m_ennemy7, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy8 = new Enemy(QRectF(mBrickPlatform6->pos(), mBrickPlatform6->boundingRect().size()), -1);
+    m_ennemy8->setPos(5300, m_groundLevel - mBrickPlatform5->boundingRect().height() - m_ennemy8->boundingRect().height() -300);
+    addItem(m_ennemy8);
+    connect(this->m_ennemy8, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy9 = new Enemy(QRectF(
+                              m_warpTube3->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_flag->pos().x() -100
+                              , 7234)
+                          , 1);
+    m_ennemy9->setPos(4200, m_groundLevel - m_ennemy9->boundingRect().height());
+    addItem(m_ennemy9);
+    connect(this->m_ennemy9, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
+    m_ennemy10 = new Enemy(QRectF(
+                              m_warpTube3->getPosBoundingRect().x()
+                              , m_ground->pos().y()
+                              , m_flag->pos().x() -100
+                              , 7234)
+                          , 1);
+    m_ennemy10->setPos(3900, m_groundLevel - m_ennemy10->boundingRect().height());
+    addItem(m_ennemy10);
+    connect(this->m_ennemy10, SIGNAL(marioStatus(int)),this, SLOT(marioDeath(int)));
+
 }
 
-void LevelScene::setMarioSize(int n){
+void LevelScene::marioDeath(int n){
+    qDebug()<<"mario dead";
+    bigMario = false;
 
+//    gameOverWindow = new GameOverWindow();
+//    gameOverWindow->setFixedSize(557,355);
+//    gameOverWindow->setWindowFlags(((gameOverWindow->windowFlags()|Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
+//    gameOverWindow->exec();
 }
 
 qreal LevelScene::jumpFactor() const{

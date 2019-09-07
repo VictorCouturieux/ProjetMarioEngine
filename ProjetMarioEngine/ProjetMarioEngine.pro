@@ -15,6 +15,7 @@ TEMPLATE = app
 SOURCES += main.cpp \
     backgrounditem.cpp \
     brickplatform.cpp \
+    enemy.cpp \
     flag.cpp \
     levelscene.cpp \
     mainview.cpp \
@@ -26,6 +27,7 @@ SOURCES += main.cpp \
 HEADERS  += \
     backgrounditem.h \
     brickplatform.h \
+    enemy.h \
     flag.h \
     levelscene.h \
     mainview.h \
