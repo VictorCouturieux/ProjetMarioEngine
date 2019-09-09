@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui \
+            multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,6 +16,7 @@ TEMPLATE = app
 SOURCES += main.cpp \
     backgrounditem.cpp \
     brickplatform.cpp \
+    defeatgamedialog.cpp \
     enemy.cpp \
     flag.cpp \
     levelscene.cpp \
@@ -27,6 +29,7 @@ SOURCES += main.cpp \
 HEADERS  += \
     backgrounditem.h \
     brickplatform.h \
+    defeatgamedialog.h \
     enemy.h \
     flag.h \
     levelscene.h \
@@ -37,6 +40,7 @@ HEADERS  += \
     wingamedialog.h
 
 FORMS    += \
+    defeatgamedialog.ui \
     wingamedialog.ui
 
 RESOURCES += \

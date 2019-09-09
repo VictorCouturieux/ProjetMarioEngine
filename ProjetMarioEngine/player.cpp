@@ -12,7 +12,6 @@ Player::Player(QGraphicsItem *parent) : QGraphicsItem(parent)
     mWalkPixmap = QPixmap(":/images/mario.png");
     mStandingPixmap = QPixmap(":/images/mariostop.png");
     mJumpPixmap = QPixmap(":/images/mario_jump.png");
-    standShootPixmap = QPixmap(":/images/mariostop.png");
     mPixmap = mWalkPixmap;
 
 }
@@ -31,13 +30,6 @@ void Player::stand(){
 
 void Player::jump(){
     mState = Jumping;
-}
-
-void Player::standShoot(){
-
-    mPixmap = standShootPixmap;
-    mCurrentFrame = 0;
-    mState = StandShoot;
 }
 
 void Player::walk(){

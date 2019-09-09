@@ -23,7 +23,6 @@ public:
 
    void stand();
    void jump();
-   void standShoot();
    void walk();
    void fall();
    bool isFalling();
@@ -31,7 +30,6 @@ public:
 private:
    enum State {
         Standing = 0,
-        StandShoot,
         Walking,
         Jumping,
         Falling
@@ -45,7 +43,6 @@ private:
    QPixmap mWalkPixmap;
    QPixmap mStandingPixmap;
    QPixmap mJumpPixmap;
-   QPixmap standShootPixmap;
 
 };
 

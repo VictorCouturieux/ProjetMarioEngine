@@ -2,6 +2,7 @@
 #define WINGAMEDIALOG_H
 
 #include <QDialog>
+#include <QAbstractButton>
 
 namespace Ui {
 class WinGameDialog;
@@ -16,6 +17,8 @@ public:
     ~WinGameDialog();
 
 private slots:
+
+
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();

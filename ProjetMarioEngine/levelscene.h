@@ -19,6 +19,7 @@ class QPropertyAnimation;
 class Player;
 class QScrollBar;
 class WinGameDialog;
+class DefeatGameDialog;
 class Flag;
 class BrickPlatform;
 class WarpTube;
@@ -33,9 +34,7 @@ public:
     void timerEvent(QTimerEvent *);
     qreal jumpFactor() const;
     void setJumpFactor(const qreal &jumpFactor);
-protected:
-    void keyPressEvent(QKeyEvent * event);
-    void keyReleaseEvent(QKeyEvent * event);
+
 
 private slots:
     void movePlayer();
@@ -53,12 +52,15 @@ private slots:
 
     bool handleCollisionWithPlatform();
 
+protected:
+    void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent * event);
+
 signals:
     void jumpFactorChanged(qreal);
 
 private:
     void initPlayField();
-
 
     QScrollBar *scroll;
     MainView *viewer;
@@ -119,6 +121,7 @@ private:
     Flag *flagVictory;
 
     WinGameDialog *winGameDialog;
+    DefeatGameDialog * defeatgameDialog;
 
     bool bigMario;
 //    bool littleMario;

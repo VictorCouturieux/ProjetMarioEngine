@@ -62,4 +62,7 @@
         <file>images/x5s.png</file>
         <file>images/warpTube2.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>audio/level1.mp3</file>
+    </qresource>
 </RCC>

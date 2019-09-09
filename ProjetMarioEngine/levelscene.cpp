@@ -1,18 +1,13 @@
 #include "levelscene.h"
-//#include "player.h"
-//#include "backgrounditem.h"
-//#include "mainview.h"
 #include "wingamedialog.h"
+#include "defeatgamedialog.h"
 #include "flag.h"
 #include "brickplatform.h"
 #include "warptube.h"
 #include "enemy.h"
 
 #include <QKeyEvent>
-//#include <QPropertyAnimation>
-//#include <QGraphicsView>
-//#include <QGraphicsPixmapItem>
-//#include <QScrollBar>
+#include <QMediaPlayer>
 
 LevelScene::LevelScene(MainView* v, QObject *parent)
     : QGraphicsScene(0,0,8000,720, parent)
@@ -65,6 +60,10 @@ LevelScene::LevelScene(MainView* v, QObject *parent)
     falling = false;
 
     m_player->addStandingDirection(1);
+
+//    QMediaPlayer *level1 = new QMediaPlayer;
+//    level1->setMedia(QUrl(":/audio/audio/level1.mp3"));
+//    level1->play();
 
 }
 
@@ -193,7 +192,7 @@ void LevelScene::initPlayField(){
                               m_warpTube1->getPosBoundingRect().x()
                               , m_ground->pos().y()
                               , m_warpTube2->pos().x() - m_warpTube1->getPosBoundingRect().x() -100
-                              , 7234)
+                              , 0)
                           , -1);
     m_ennemy2->setPos(1850, m_groundLevel - m_ennemy2->boundingRect().height());
     addItem(m_ennemy2);
@@ -203,7 +202,7 @@ void LevelScene::initPlayField(){
                               m_warpTube2->getPosBoundingRect().x()
                               , m_ground->pos().y()
                               , m_warpTube3->pos().x() - m_warpTube2->getPosBoundingRect().x() -100
-                              , 7234)
+                              , 0)
                           , -1);
     m_ennemy3->setPos(2300, m_groundLevel - m_ennemy3->boundingRect().height());
     addItem(m_ennemy3);
@@ -217,8 +216,8 @@ void LevelScene::initPlayField(){
     m_ennemy5 = new Enemy(QRectF(
                               m_warpTube3->getPosBoundingRect().x()
                               , m_ground->pos().y()
-                              , m_flag->pos().x() -100
-                              , 7234)
+                              , 7234
+                              , 0)
                           , -1);
     m_ennemy5->setPos(3700, m_groundLevel - m_ennemy5->boundingRect().height());
     addItem(m_ennemy5);
@@ -227,8 +226,8 @@ void LevelScene::initPlayField(){
     m_ennemy6 = new Enemy(QRectF(
                               m_warpTube3->getPosBoundingRect().x()
                               , m_ground->pos().y()
-                              , m_flag->pos().x() -100
-                              , 7234)
+                              , 7234
+                              , 0)
                           , -1);
     m_ennemy6->setPos(4700, m_groundLevel - m_ennemy6->boundingRect().height());
     addItem(m_ennemy6);
@@ -237,8 +236,8 @@ void LevelScene::initPlayField(){
     m_ennemy7 = new Enemy(QRectF(
                               m_warpTube3->getPosBoundingRect().x()
                               , m_ground->pos().y()
-                              , m_flag->pos().x() -100
-                              , 7234)
+                              , 7234
+                              , 0)
                           , -1);
     m_ennemy7->setPos(5500, m_groundLevel - m_ennemy7->boundingRect().height());
     addItem(m_ennemy7);
@@ -252,8 +251,8 @@ void LevelScene::initPlayField(){
     m_ennemy9 = new Enemy(QRectF(
                               m_warpTube3->getPosBoundingRect().x()
                               , m_ground->pos().y()
-                              , m_flag->pos().x() -100
-                              , 7234)
+                              , 7234
+                              , 0)
                           , 1);
     m_ennemy9->setPos(4200, m_groundLevel - m_ennemy9->boundingRect().height());
     addItem(m_ennemy9);
@@ -262,8 +261,8 @@ void LevelScene::initPlayField(){
     m_ennemy10 = new Enemy(QRectF(
                               m_warpTube3->getPosBoundingRect().x()
                               , m_ground->pos().y()
-                              , m_flag->pos().x() -100
-                              , 7234)
+                              , 7234
+                              , 0)
                           , 1);
     m_ennemy10->setPos(3900, m_groundLevel - m_ennemy10->boundingRect().height());
     addItem(m_ennemy10);
@@ -275,10 +274,10 @@ void LevelScene::marioDeath(int n){
     qDebug()<<"mario dead";
     bigMario = false;
 
-//    gameOverWindow = new GameOverWindow();
-//    gameOverWindow->setFixedSize(557,355);
-//    gameOverWindow->setWindowFlags(((gameOverWindow->windowFlags()|Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
-//    gameOverWindow->exec();
+    defeatgameDialog = new DefeatGameDialog();
+    defeatgameDialog->setWindowFlags(((defeatgameDialog->windowFlags()|Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
+    defeatgameDialog->exec();
+
 }
 
 qreal LevelScene::jumpFactor() const{
@@ -321,56 +320,6 @@ void LevelScene::checkTimer(){
     }
 }
 
-//Player key movement
-void LevelScene::keyPressEvent(QKeyEvent *event){
-    if (event->isAutoRepeat())
-        return;
-    switch (event->key()){
-        case Qt::Key_Right:
-            m_player->addDirection(1);
-            m_player->addStandingDirection(1);
-            checkTimer();
-        break;
-        case Qt::Key_Left:
-            m_player->addDirection(-1);
-            m_player->addStandingDirection(-1);
-            checkTimer();
-        break;
-        case Qt::Key_Space:
-        if (mFallTimer.isActive()){
-            return;
-        }else{
-            if(QAbstractAnimation::Stopped == m_jumpAnimation->state()){
-                m_jumpAnimation->start();
-            }
-        }
-        break;
-        default:
-        break;
-    }
-
-}
-
-void LevelScene::keyReleaseEvent(QKeyEvent *event){
-    if (event->isAutoRepeat())
-        return;
-
-    switch (event->key()) {
-        case Qt::Key_Right:
-            m_player->addDirection(-1);
-            m_player->addStandingDirection(1);
-            checkTimer();
-        break;
-        case Qt::Key_Left:
-            m_player->addDirection(1);
-            m_player->addStandingDirection(-1);
-            checkTimer();
-        break;
-        default:
-        break;
-    }
-}
-
 void LevelScene::movePlayer(){
 
     checkCollidingFlag();
@@ -397,9 +346,7 @@ void LevelScene::movePlayer(){
             return;
         }
 
-
         const int dx = direction * m_velocity;
-
         if (direction > 0){
 
             if(m_player->pos().x()==7956){
@@ -412,27 +359,15 @@ void LevelScene::movePlayer(){
             if(diff > 800){
 
                 if(scroll->value() > 6720){
-//                    qDebug()<<"6720";
                     return;
                 }
 
                 scroll->setValue(dx + scroll->value());
                 m_sky->setPos(dx + m_sky->pos().x(), 0);
                 m_Scene->setPos(dx + m_Scene->pos().x(), m_Scene->y());
-
-//                m_countLogo->setPos(dx + m_countLogo->pos().x(), m_countLogo->y());
-//                m_count->setPos(dx + m_count->pos().x(), m_count->y());
-//                m_score->setPos(dx + m_score->pos().x(), m_score->y());
-//                m_gameTimer->setPos(dx + m_gameTimer->pos().x(), m_gameTimer->y());
-//                m_scoreLogo->setPos(dx + m_scoreLogo->pos().x(), m_scoreLogo->y());
-//                m_timerLogo->setPos(dx + m_timerLogo->pos().x(), m_timerLogo->y());
-//                gameover->setPos(dx + gameover->pos().x(), gameover->y());
-//                courseclear->setPos(dx + courseclear->pos().x(), courseclear->y());
             }
         }
-
         if (direction < 0){
-
             if(m_player->pos().x()<0){
                 return;
             }
@@ -445,19 +380,9 @@ void LevelScene::movePlayer(){
                 if(m_sky->pos().x() == 0){
                     return;
                 }
-
                 scroll->setValue(dx + scroll->value());
                 m_sky->setPos(dx + m_sky->pos().x(), 0);
                 m_Scene->setPos(dx + m_Scene->pos().x(), m_Scene->y());
-
-                //                m_countLogo->setPos(dx + m_countLogo->pos().x(), m_countLogo->y());
-                //                m_count->setPos(dx + m_count->pos().x(), m_count->y());
-                //                m_score->setPos(dx + m_score->pos().x(), m_score->y());
-                //                m_gameTimer->setPos(dx + m_gameTimer->pos().x(), m_gameTimer->y());
-                //                m_scoreLogo->setPos(dx + m_scoreLogo->pos().x(), m_scoreLogo->y());
-                //                m_timerLogo->setPos(dx + m_timerLogo->pos().x(), m_timerLogo->y());
-                //                gameover->setPos(dx + gameover->pos().x(), gameover->y());
-//                                courseclear->setPos(dx + courseclear->pos().x(), courseclear->y());
             }
         }
 
@@ -467,17 +392,19 @@ void LevelScene::movePlayer(){
 
 void LevelScene::fallPlayer(){
 //    qDebug()<<"FALL";
-    m_player->setPos(m_player->pos().x(), m_player->pos().y() +30);
-    QGraphicsItem* item = collidingPlatforms();
-    if(item && handleCollisionWithPlatform()){
-        mFallTimer.stop();
-        m_player->walk();
-    }
-    else if(m_player->pos().y() + m_player->boundingRect().height() >= m_groundLevel){
-        m_player->setPos(m_player->pos().x(), m_groundLevel - m_player->boundingRect().height());
-        mFallTimer.stop();
-        m_player->walk();
-        m_platform = 0;
+    if(bigMario){
+        m_player->setPos(m_player->pos().x(), m_player->pos().y() +30);
+        QGraphicsItem* item = collidingPlatforms();
+        if(item && handleCollisionWithPlatform()){
+            mFallTimer.stop();
+            m_player->walk();
+        }
+        else if(m_player->pos().y() + m_player->boundingRect().height() >= m_groundLevel){
+            m_player->setPos(m_player->pos().x(), m_groundLevel - m_player->boundingRect().height());
+            mFallTimer.stop();
+            m_player->walk();
+            m_platform = 0;
+        }
     }
 }
 
@@ -492,48 +419,50 @@ void LevelScene::jumpPlayer(){
         return;
     }
 
-    QGraphicsItem* item = collidingPlatforms();
-    if(item){
-        if(m_player->isTouchingHead(item)){
+    if(bigMario){
+        QGraphicsItem* item = collidingPlatforms();
+        if(item){
+            if(m_player->isTouchingHead(item)){
 
-            m_jumpAnimation->stop();
+                m_jumpAnimation->stop();
 
-            if(m_platform){
-                m_player->setPos(m_player->pos().x(), m_platform->pos().y() - m_player->boundingRect().height());
-                return;
-            }
-            if(!m_platform){
-                m_player->setPos(m_player->pos().x(), m_groundLevel - m_player->boundingRect().height());
-                return;
-            }
-        }
-        else{
-            if(handleCollisionWithPlatform()){
-                return;
-            }
-        }
-    }
-
-    if(mFallTimer.isActive()){
-        return;
-    }
-    qreal y = (m_groundLevel - m_player->boundingRect().height()) - m_jumpAnimation->currentValue().toReal() * m_jumpHeight;
-    if(m_platform){
-        y = (m_platform->pos().y() - m_player->boundingRect().height()) - m_jumpAnimation->currentValue().toReal() * m_jumpHeight;
-        if(!(m_platform && m_player->isTouchingPlatform(m_platform)) && m_jumpFactor < 0.1 ) {
-            if((m_player->pos().x() < m_platform->pos().x()) || (m_player->pos().x() > m_platform->pos().x() + m_platform->boundingRect().width())){
-                if(!m_platform){
-                    m_platform = 0;
+                if(m_platform){
+                    m_player->setPos(m_player->pos().x(), m_platform->pos().y() - m_player->boundingRect().height());
+                    return;
                 }
-                if(m_player->pos().y() < m_groundLevel){
-                    m_player->fall();
-                    mFallTimer.start();
+                if(!m_platform){
+                    m_player->setPos(m_player->pos().x(), m_groundLevel - m_player->boundingRect().height());
+                    return;
+                }
+            }
+            else{
+                if(handleCollisionWithPlatform()){
                     return;
                 }
             }
         }
+
+        if(mFallTimer.isActive()){
+            return;
+        }
+        qreal y = (m_groundLevel - m_player->boundingRect().height()) - m_jumpAnimation->currentValue().toReal() * m_jumpHeight;
+        if(m_platform){
+            y = (m_platform->pos().y() - m_player->boundingRect().height()) - m_jumpAnimation->currentValue().toReal() * m_jumpHeight;
+            if(!(m_platform && m_player->isTouchingPlatform(m_platform)) && m_jumpFactor < 0.1 ) {
+                if((m_player->pos().x() < m_platform->pos().x()) || (m_player->pos().x() > m_platform->pos().x() + m_platform->boundingRect().width())){
+                    if(!m_platform){
+                        m_platform = 0;
+                    }
+                    if(m_player->pos().y() < m_groundLevel){
+                        m_player->fall();
+                        mFallTimer.start();
+                        return;
+                    }
+                }
+            }
+        }
+        m_player->setPos(m_player->pos().x(), y);
     }
-    m_player->setPos(m_player->pos().x(), y);
 }
 
 void LevelScene::jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState){
@@ -542,18 +471,84 @@ void LevelScene::jumpStatusChanged(QAbstractAnimation::State newState, QAbstract
     }
 }
 
-QGraphicsItem* LevelScene::collidingPlatforms(){
-    //todo return platform without colision
-    QList<QGraphicsItem*> items =  collidingItems(m_player);
-    foreach(QGraphicsItem *item, items){
-            if(BrickPlatform *brickplatform = qgraphicsitem_cast<BrickPlatform *>(item)){
-                return brickplatform;
+////////
+///  CONTROLER
+////////
+
+//Player key movement
+void LevelScene::keyPressEvent(QKeyEvent *event){
+    if (event->isAutoRepeat())
+        return;
+    switch (event->key()){
+        case Qt::Key_Right:
+            if(bigMario){
+                m_player->addDirection(1);
+                m_player->addStandingDirection(1);
+                checkTimer();
             }
-            if(WarpTube *warpTube = qgraphicsitem_cast<WarpTube *>(item)){
-                return warpTube;
+        break;
+        case Qt::Key_Left:
+            if(bigMario){
+                m_player->addDirection(-1);
+                m_player->addStandingDirection(-1);
+                checkTimer();
             }
+        break;
+        case Qt::Key_Space:
+            if(bigMario){
+                if (mFallTimer.isActive()){
+                    return;
+                }else{
+                    if(QAbstractAnimation::Stopped == m_jumpAnimation->state()){
+                        m_jumpAnimation->start();
+                    }
+                }
+            }
+        break;
+        default:
+        break;
     }
-    return 0;
+
+}
+
+void LevelScene::keyReleaseEvent(QKeyEvent *event){
+    if (event->isAutoRepeat())
+        return;
+
+    switch (event->key()) {
+        case Qt::Key_Right:
+            if(bigMario){
+                m_player->addDirection(-1);
+                m_player->addStandingDirection(1);
+                checkTimer();
+            }
+        break;
+        case Qt::Key_Left:
+            if(bigMario){
+                m_player->addDirection(1);
+                m_player->addStandingDirection(-1);
+                checkTimer();
+            }
+        break;
+        default:
+        break;
+    }
+}
+
+QGraphicsItem* LevelScene::collidingPlatforms(){
+    if(bigMario){
+        //todo return platform without colision
+        QList<QGraphicsItem*> items =  collidingItems(m_player);
+        foreach(QGraphicsItem *item, items){
+                if(BrickPlatform *brickplatform = qgraphicsitem_cast<BrickPlatform *>(item)){
+                    return brickplatform;
+                }
+                if(WarpTube *warpTube = qgraphicsitem_cast<WarpTube *>(item)){
+                    return warpTube;
+                }
+        }
+        return 0;
+    }
 }
 
 void LevelScene::checkCollidingFlag(){
@@ -562,9 +557,7 @@ void LevelScene::checkCollidingFlag(){
         Flag* f = qgraphicsitem_cast<Flag*>(item);
         if(f){
             removeItem(f);
-//            addItem(courseclear);
             winGameDialog = new WinGameDialog();
-            winGameDialog->setFixedSize(557,355);
             winGameDialog->setWindowFlags(((winGameDialog ->windowFlags() | Qt::CustomizeWindowHint)& ~Qt::WindowCloseButtonHint));
             winGameDialog->exec();
         }
@@ -572,35 +565,39 @@ void LevelScene::checkCollidingFlag(){
 }
 
 bool LevelScene::handleCollisionWithPlatform(){
-    QGraphicsItem* platform =  collidingPlatforms();
-    if(platform) {
-        QPointF platformPos = platform->pos();
-        if(m_player->isTouchingFoot(platform)){
-            m_player->setPos(m_player->pos().x(), platformPos.y() - m_player->boundingRect().height());
-            m_platform = platform;
-            m_jumpAnimation->stop();
-            return true;
+    if(bigMario){
+        QGraphicsItem* platform =  collidingPlatforms();
+        if(platform) {
+            QPointF platformPos = platform->pos();
+            if(m_player->isTouchingFoot(platform)){
+                m_player->setPos(m_player->pos().x(), platformPos.y() - m_player->boundingRect().height());
+                m_platform = platform;
+                m_jumpAnimation->stop();
+                return true;
+            }
         }
+        else{
+            m_platform = 0;
+        }
+        return false;
     }
-    else{
-        m_platform = 0;
-    }
-    return false;
 }
 
 void LevelScene::checkCollidingWarpTube() {
-    QList<QGraphicsItem*> items = collidingItems(m_player);
-    foreach (QGraphicsItem* item, items) {
+    if(bigMario){
+        QList<QGraphicsItem*> items = collidingItems(m_player);
+        foreach (QGraphicsItem* item, items) {
 
-        WarpTube* w = qgraphicsitem_cast<WarpTube*>(item);
-        if(w){
-            if(w->pos().x()){
-                if(m_player->pos().x() < w->pos().x())
-                    m_player->setPos(w->pos().x() - m_player->boundingRect().width(),m_player->pos().y());
-                if(m_player->pos().x() > w->pos().x() && m_player->pos().y() > w->pos().y()){
-                    m_player->setPos(w->pos().x() + w->boundingRect().width()+10, m_player->pos().y());
+            WarpTube* w = qgraphicsitem_cast<WarpTube*>(item);
+            if(w){
+                if(w->pos().x()){
+                    if(m_player->pos().x() < w->pos().x())
+                        m_player->setPos(w->pos().x() - m_player->boundingRect().width(),m_player->pos().y());
+                    if(m_player->pos().x() > w->pos().x() && m_player->pos().y() > w->pos().y()){
+                        m_player->setPos(w->pos().x() + w->boundingRect().width()+10, m_player->pos().y());
+                    }
                 }
             }
         }
-     }
+    }
 }
