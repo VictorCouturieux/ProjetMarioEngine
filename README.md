@@ -1,2 +1,2 @@
 # ProjetMarioEngine
-Cnam programing school game project.
+Cnam enjmin openGL programming course.
