@@ -1,2 +1,2 @@
 # ProjetMarioEngine
-Cnam enjmin openGL programming course.
+Cnam enjmin Qt programming course.
